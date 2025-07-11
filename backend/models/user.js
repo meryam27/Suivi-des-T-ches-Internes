@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema({
   password: { 
     type: String, 
     required: true,
-    select: false // Ne pas retourner le mot de passe par défaut
+     // Ne pas retourner le mot de passe par défaut
   },
   role: { 
     type: String, 

@@ -28,18 +28,18 @@ const ProjectSchema = new mongoose.Schema({
     enum: ['active', 'inactive', 'completed'], 
     default: 'active' 
   },
-  progression: {  // Nouveau champ
+  progression: {
     type: Number,
     min: 0,
     max: 100,
     default: 0
   },
-  assignedEmployees: [{  // Assignation multiple
+  assignedEmployees: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   }],
   logo: {
-    type: String, // URL ou chemin du fichier
+    type: String,
     default: ''
   },
   priority: {
@@ -52,27 +52,37 @@ const ProjectSchema = new mongoose.Schema({
     default: Date.now
   }
 }, {
-  toJSON: { virtuals: true },//quand on transforme les documents en objectjs ou objectjson ca incluts les champs
+  toJSON: { virtuals: true },
   toObject: { virtuals: true }
 });
 
-// Virtual pour les tâches liées
+// Virtual pour les tâches (utile pour les populate)
 ProjectSchema.virtual('tasks', {
   ref: 'Task',
   localField: '_id',
   foreignField: 'project'
 });
 
-// Middleware pour calcul automatique de la progression
-ProjectSchema.pre('save', async function(next) {
-  if (this.isModified('tasks')) {
-    const tasks = await mongoose.model('Task').find({ project: this._id });
-    if (tasks.length > 0) {
-      const completedCount = tasks.filter(t => t.status === 'completed').length;
-      this.progression = Math.round((completedCount / tasks.length) * 100);
+// Méthode pour calculer la progression (utilisée par les hooks de Task)
+ProjectSchema.methods.updateProgression = async function() {
+  const tasks = await mongoose.model('Task').find({ project: this._id });
+  const totalTasks = tasks.length;
+  
+  if (totalTasks > 0) {
+    const completedCount = tasks.filter(t => t.status === 'completed').length;
+    this.progression = Math.round((completedCount / totalTasks) * 100);
+    
+    // Mise à jour automatique du statut
+    if (this.progression === 100) {
+      this.status = 'completed';
+    } else if (this.status === 'completed') {
+      this.status = 'active';
     }
+  } else {
+    this.progression = 0;
   }
-  next();
-});
+  
+  return this.save();
+};
 
 module.exports = mongoose.model('Project', ProjectSchema);
