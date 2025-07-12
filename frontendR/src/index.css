@@ -82,6 +82,196 @@ html {
   cursor: pointer;
 }
 
+/***************DASHBOARD PAGE ****************/
+/* .brieve-satatistiques {
+  height: 20rem;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  padding-left: 20rem;
+  padding-top: 8rem;
+  gap: 3rem;
+  position: relative;
+}
+.dashboard-cart {
+  height: 16rem;
+  width: 30rem;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  cursor: pointer;
+  background-color: antiquewhite;
+  position: absolute;
+}
+.dashboard-cart :hover {
+}
+@media screen and (max-width: 991px) {
+  .brieve-satatistiques {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding-left: none;
+  }
+  .dashboard-cart {
+    height: 10rem;
+    width: 20rem;
+  }
+} */
+/* Structure générale */
+.dashboard-page {
+  padding: 2rem;
+  background-color: #f9fafb;
+  min-height: 100vh;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* Titre et message de bienvenue */
+.display-dashboard {
+  text-align: left;
+  margin-bottom: 2rem;
+  margin-left: 21rem;
+}
+
+.display-dashboard-title {
+  font-size: 3rem;
+  color: #e3959c; /* Bleu Tailwind */
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+.display-dashboard-text {
+  font-size: 1.5rem;
+  color: #000; /* Gris foncé */
+}
+
+/* Conteneur des cartes */
+.brieve-satatistiques {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+  margin-left: 20rem;
+}
+
+/* Carte individuelle */
+.dashboard-cart {
+  background-color: #ffffff;
+  border-radius: 2rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-left: 5px solid #e9a1a1;
+  cursor: pointer;
+}
+
+.dashboard-cart:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+}
+/***********cart container***********/
+.check {
+  height: 3rem;
+  width: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.cart-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 4rem;
+}
+.right-part i {
+  font-size: 3rem;
+}
+.right-part {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+  margin-left: 2rem;
+
+  padding: 3rem;
+  border-radius: 1rem;
+  box-shadow: 0rem 0.4rem 1rem rgba(0, 0, 0, 0.2);
+}
+/***********TACHES TERMINEES***********/
+/*icones*/
+.en-cours,
+.projet-en-cours {
+  background-color: rgb(198, 215, 249);
+  color: rgb(48, 48, 162);
+}
+.termine {
+  background-color: rgb(171, 236, 171);
+  color: green;
+}
+.a-faire {
+  background-color: rgb(241, 150, 150);
+  color: rgb(88, 18, 18);
+}
+/* Contenu à gauche */
+.left-part {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.display-6 {
+  font-size: 1.6rem;
+  color: #020711; /* Gris foncé */
+  font-weight: 600;
+}
+
+.left-part span {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #111827; /* Très foncé */
+  margin-left: 4rem;
+}
+
+/* Responsive sur petits écrans */
+
+/***********DASHBOARD BODY DIAGRAMMES ********/
+.dashboard-diagramme {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch; /* 👈 même hauteur */
+  gap: 2rem;
+  margin-left: 20rem;
+  margin-right: 2rem;
+  margin-top: 2rem;
+}
+
+.diagramme-barriere,
+.diagramme-cercle {
+  flex: 1 1 48%;
+  max-width: 48%;
+  background-color: #fff;
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* 👈 équilibre vertical */
+  align-items: center;
+}
+
+.diagramme-cercle {
+  gap: 3rem;
+}
+
+.diagramme-cercle > div {
+  height: 45%; /* 🔽 réduit la taille de chaque camembert */
+}
+
+/*************PETITE ECRAN ***************/
+
 /* Menu caché par défaut en mobile */
 @media screen and (max-width: 991px) {
   .navbar {
@@ -122,4 +312,107 @@ html {
     left: 50%;
     transform: translateX(-50%);
   }
+  /********************/
+  .display-dashboard {
+    margin-left: 5rem !important;
+  }
+
+  /*************************/
+
+  .brieve-satatistiques {
+    margin-left: 0rem !important;
+  }
+  .display-dashboard-title {
+    font-size: 2rem;
+  }
+
+  .left-part span {
+    font-size: 1.5rem;
+  }
+  /**********************/
+  .dashboard-diagramme {
+    flex-direction: column;
+    margin-left: 0rem !important;
+  }
+  .diagramme-barriere,
+  .diagramme-cercle {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+}
+
+/*************************************DASHBOARD ADMIN STYLE **********************/
+.dashboard-admin-container {
+  display: flex;
+  flex-direction: column;
+  margin-left: 20rem;
+  padding: 2rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  width: 100%;
+  gap: 1rem;
+}
+
+.header .left {
+  flex: 1; /* prend tout l'espace disponible */
+  min-width: 250px;
+}
+
+.header .title {
+  font-size: 2.9rem;
+  color: #e3959c;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+.header .text {
+  font-size: 1.5rem;
+  color: #000;
+}
+
+.header .right {
+  font-size: 3.8rem;
+  color: #021b4e;
+  min-width: 40px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-right: 2rem;
+  position: relative; /* pour positionner le badge en absolu */
+}
+
+.header .right .notification-badge {
+  position: absolute;
+  top: 0; /* ajuste selon ton besoin */
+  right: 0; /* ajuste selon ton besoin */
+  background-color: rgb(244, 124, 124);
+  color: white;
+  border-radius: 50%;
+  font-size: 0.99rem;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+}
+
+@media screen and (max-width: 991px) {
+  .dashboard-admin-container {
+    margin-left: 6rem !important;
+  }
+}
+.dashboard-admin-container .body {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch; /* 👈 même hauteur */
+  gap: 2rem;
+  margin-left: 20rem;
+  margin-right: 2rem;
+  margin-top: 2rem;
 }
