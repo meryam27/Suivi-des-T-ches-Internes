@@ -364,15 +364,15 @@ html {
 }
 
 .header .title {
-  font-size: 2.9rem;
+  font-size: 3.7rem;
   color: #e3959c;
   margin-bottom: 0.5rem;
   font-weight: bold;
 }
 
 .header .text {
-  font-size: 1.5rem;
-  color: #000;
+  font-size: 1.7rem;
+  color: #464444;
 }
 
 .header .right {
@@ -435,4 +435,103 @@ html {
 
 .body .left > div {
   height: 45%; /* 🔽 réduit la taille de chaque camembert */
+}
+@media screen and (max-width: 991px) {
+  .body {
+    flex-direction: column;
+    margin-left: 0 !important;
+  }
+  .body .left,
+  .body .right {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+}
+/************************************************/
+.recent-dcontainer {
+  background-color: #f9fafb; /* Fond clair */
+  border-left: 5px solid #60a5fa; /* Bord bleu à gauche */
+  border-radius: 0.5rem;
+  padding: 1rem 1.5rem;
+  margin: 1rem 1rem 1rem 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: background-color 0.3s;
+  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.recent-dcontainer:hover {
+  background-color: #eef6fd;
+}
+
+.tache-title {
+  font-weight: bold;
+  color: #1e3a8a;
+  font-size: 1.8rem;
+}
+
+.tache-description {
+  color: #374151;
+  font-size: 1.5rem;
+}
+.recent-taches,
+.critical-taches {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: rgb(0, 0, 15);
+
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+.tache-journalier {
+  text-align: center;
+}
+/**************************/
+.critical-dcontainer {
+  background-color: #f9fafb; /* Fond clair */
+  border-left: 5px solid #f59e8b; /* Bord bleu à gauche */
+  border-radius: 0.5rem;
+  padding: 1rem 1.5rem;
+  margin: 1rem 1rem 1rem 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: background-color 0.3s;
+  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.critical-dcontainer:hover {
+  background-color: #eef6fd;
+}
+
+.critical-dcontainer .tache-title {
+  font-weight: bold;
+  color: #d50b08;
+  font-size: 1.8rem;
+}
+
+.critical-dcontainer .tache-description {
+  color: #374151;
+  font-size: 1.5rem;
+}
+.critical-dcontainer .recent-taches {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: rgb(0, 0, 15);
+
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+.critical-taches i {
+  color: rgb(231, 201, 9);
+  margin-right: 1rem;
+}
+.recent-taches i {
+  color: #557ef0;
+  margin-left: 1.4rem;
 }
