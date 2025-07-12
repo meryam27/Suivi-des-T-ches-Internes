@@ -4,6 +4,86 @@ const User = require("../../models/user");
 
 exports.getStats = async (req, res) => {
   try {
+    const today = new Date();
+    const startDate = new Date();
+    startDate.setDate(today.getDate() - 6); // 7 derniers jours
+
+    // Étape 1 : Agrégation des tâches journalières par date
+    const rawDaily = await Task.aggregate([
+      {
+        $match: {
+          type: "daily",
+          createdAt: {
+            $gte: startDate,
+            $lte: today,
+          },
+        },
+      },
+      {
+        $group: {
+          _id: {
+            $dateToString: { format: "%Y-%m-%d", date: "$createdAt" },
+          },
+          total: { $sum: 1 },
+          completed: {
+            $sum: {
+              $cond: [{ $eq: ["$status", "completed"] }, 1, 0],
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          date: "$_id",
+          pourcentage: {
+            $cond: [
+              { $eq: ["$total", 0] },
+              0,
+              {
+                $round: [
+                  { $multiply: [{ $divide: ["$completed", "$total"] }, 100] },
+                  0,
+                ],
+              },
+            ],
+          },
+          nombre: {
+            $concat: [
+              { $toString: "$completed" },
+              "/",
+              { $toString: "$total" },
+            ],
+          },
+        },
+      },
+    ]);
+
+    // Étape 2 : Ajouter les jours manquants (jours sans tâche)
+    const getLastNDays = (n) => {
+      const dates = [];
+      const today = new Date();
+      for (let i = n - 1; i >= 0; i--) {
+        const d = new Date(today);
+        d.setDate(today.getDate() - i);
+        dates.push(d.toISOString().slice(0, 10));
+      }
+      return dates;
+    };
+
+    const last7Days = getLastNDays(7);
+    const mapRaw = Object.fromEntries(rawDaily.map((d) => [d.date, d]));
+
+    const dailyProgression = last7Days.map((date) => {
+      return (
+        mapRaw[date] || {
+          date,
+          pourcentage: 0,
+          nombre: "0/0",
+        }
+      );
+    });
+
     // 1. Statistiques globales (projets et tâches)
     const [
       activeProjects,
@@ -117,6 +197,7 @@ exports.getStats = async (req, res) => {
         progression: progressionData,
         total: totalTasks,
         overallProgression,
+        dailyProgression,
       },
       activities: {
         recent: recentActivities,
