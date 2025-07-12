@@ -7,11 +7,12 @@ import {
   Cell,
   ResponsiveContainer,
   Legend,
+  BarChart,
 } from "recharts";
 import axios from "axios";
 
 const COLORS = ["#facc15", "#60a5fa", "#34d399", "#f87171"];
-
+const COLORS2 = ["#60a5fa", "#34d399", "#f87171"];
 const DashboardAdminComp = () => {
   const [stats, setStats] = useState(null);
 
@@ -29,20 +30,34 @@ const DashboardAdminComp = () => {
         console.error("Erreur récupération stats :", err);
       });
   }, []);
-  console.log(stats.activities);
   if (!stats) return <div>Chargement des statistiques...</div>;
 
+  const dailyTasksStats = stats.tasks.stats.find((s) => s.type === "daily");
   const longTasksStats = stats.tasks.stats.find((s) => s.type === "long");
-
-  const pieData = longTasksStats
+  const pieDataDaily = dailyTasksStats
     ? [
-        { name: "À faire", value: longTasksStats.pending || 0 },
-        { name: "En cours", value: longTasksStats.inProgress || 0 },
-        { name: "Terminée", value: longTasksStats.completed || 0 },
-        { name: "En retard", value: longTasksStats.late || 0 },
+        { name: "À faire", value: dailyTasksStats.pending || 0 },
+        { name: "En cours", value: dailyTasksStats.inProgress || 0 },
+        { name: "Terminée", value: dailyTasksStats.completed || 0 },
+        { name: "En retard", value: dailyTasksStats.late || 0 },
       ]
     : [];
-
+  // const pieDataLong = longTasksStats
+  //   ? [
+  //       { name: "À faire", value: longTasksStats.pending || 0 },
+  //       { name: "En cours", value: longTasksStats.inProgress || 0 },
+  //       { name: "Terminée", value: longTasksStats.completed || 0 },
+  //       { name: "En retard", value: longTasksStats.late || 0 },
+  //     ]
+  //   : [];
+  const projectData = stats.projects;
+  const pieProject = projectData
+    ? [
+        { name: "Actif", value: projectData.active || 0 },
+        { name: "Completé", value: projectData.complected || 0 },
+        { name: "Inactif", value: projectData.inactive || 0 },
+      ]
+    : [];
   return (
     <div className="dashboard-admin-container">
       <div className="header">
@@ -57,12 +72,16 @@ const DashboardAdminComp = () => {
       </div>
 
       <div className="body">
-        <div className="left">
+        <div className="left"></div>
+
+        <div className="right">
+          {/* Tu peux ajouter un autre graphique ou des KPIs ici */}
+          {/* long tasks */}
           <div style={{ width: "100%", maxWidth: "500px", margin: "auto" }}>
             <h3 style={{ textAlign: "center" }}>
               Avancement des Tâches Longues
             </h3>
-            {pieData.length === 0 ? (
+            {pieDataDaily.length === 0 ? (
               <p style={{ color: "#888", textAlign: "center" }}>
                 Aucune donnée à afficher pour les tâches longues.
               </p>
@@ -70,7 +89,7 @@ const DashboardAdminComp = () => {
               <ResponsiveContainer width={"100%"} height={300}>
                 <PieChart>
                   <Pie
-                    data={pieData}
+                    data={pieDataDaily}
                     dataKey="value"
                     nameKey="name"
                     cx="50%"
@@ -78,7 +97,7 @@ const DashboardAdminComp = () => {
                     outerRadius={98}
                     label
                   >
-                    {pieData.map((entry, index) => (
+                    {pieDataDaily.map((entry, index) => (
                       <Cell
                         key={`cell-${index}`}
                         fill={COLORS[index % COLORS.length]}
@@ -91,10 +110,38 @@ const DashboardAdminComp = () => {
               </ResponsiveContainer>
             )}
           </div>
-        </div>
-
-        <div className="right">
-          {/* Tu peux ajouter un autre graphique ou des KPIs ici */}
+          {/* projets */}
+          <div style={{ width: "100%", maxWidth: "500px", margin: "auto" }}>
+            <h3 style={{ textAlign: "center" }}>Avancement des Projets</h3>
+            {pieDataDaily.length === 0 ? (
+              <p style={{ color: "#888", textAlign: "center" }}>
+                Aucune donnée à afficher pour les Projets.
+              </p>
+            ) : (
+              <ResponsiveContainer width={"100%"} height={300}>
+                <PieChart>
+                  <Pie
+                    data={pieProject}
+                    dataKey="value"
+                    nameKey="name"
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={98}
+                    label
+                  >
+                    {pieProject.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS2[index % COLORS2.length]}
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
+            )}
+          </div>
         </div>
       </div>
 
@@ -104,3 +151,5 @@ const DashboardAdminComp = () => {
 };
 
 export default DashboardAdminComp;
+
+////////::DIAGRAMME CIRCULAIRE TACHES JOURNALIERES//////////////

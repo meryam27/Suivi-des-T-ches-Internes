@@ -412,7 +412,27 @@ html {
   justify-content: space-between;
   align-items: stretch; /* 👈 même hauteur */
   gap: 2rem;
-  margin-left: 20rem;
   margin-right: 2rem;
   margin-top: 2rem;
+}
+.body .left,
+.body .right {
+  flex: 1 1 48%;
+  max-width: 48%;
+  background-color: #fff;
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* 👈 équilibre vertical */
+  align-items: center;
+}
+
+.body .right {
+  gap: 3rem;
+}
+
+.body .left > div {
+  height: 45%; /* 🔽 réduit la taille de chaque camembert */
 }
