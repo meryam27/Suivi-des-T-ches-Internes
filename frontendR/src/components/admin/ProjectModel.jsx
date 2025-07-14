@@ -1,9 +1,24 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./ProjectModal.css";
 import defaultProject from "../../assets/images/project-default.jpg";
 import defaultProfil from "../../assets/images/profil-default.jpeg";
-
+import axios from "axios";
 const ProjectModal = ({ project, onClose }) => {
+  const [detailProject, setDetailProject] = useState({});
+  useEffect(() => {
+    axios
+      .get("http://localhost:5001/api/admin/projectDetails", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
+      .then((res) => {
+        setDetailProject(res.data),
+          console.log("Project details", detailProject);
+      })
+      .catch((err) => console.error("Error fetching project details:", err));
+  }, []);
+
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>

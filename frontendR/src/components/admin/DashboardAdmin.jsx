@@ -78,7 +78,7 @@ const DashboardAdminComp = () => {
     { name: "Completé", value: projectData.completed || 0 },
     { name: "Inactif", value: projectData.inactive || 0 },
   ];
-
+  console.log("test , ", stats.activities.critical);
   return (
     <div className="dashboard-admin-container">
       <div className="header">
@@ -270,16 +270,19 @@ function ActivityCard({ title, icon, data, critical }) {
               <div className="activity-meta">
                 {critical ? (
                   <>
-                    <span className="activity-priority">
-                      Priorité: {el.priority}
-                    </span>
+                    <span className="activity-priority">Prioritaire</span>
                     <span className="activity-deadline">
-                      Échéance: {new Date(el.deadline).toLocaleDateString()}
+                      Échéance:
+                      {el.deadline
+                        ? new Date(el.deadline).toLocaleString()
+                        : "date non définie"}
                     </span>
                   </>
                 ) : (
                   <span className="activity-date">
-                    {new Date(el.date).toLocaleString()}
+                    {el.deadline
+                      ? new Date(el.deadline).toLocaleString()
+                      : "date non définie"}
                   </span>
                 )}
               </div>
