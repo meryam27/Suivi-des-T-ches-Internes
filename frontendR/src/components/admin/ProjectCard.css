@@ -1,0 +1,160 @@
+html {
+  font-size: 62.5%;
+}
+
+.project-card {
+  width: 26rem;
+  min-height: 30rem;
+  background-color: #ffffff;
+  border-radius: 1.6rem;
+  box-shadow: 0 0.8rem 2.4rem rgba(0, 0, 0, 0.06);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.project-card:hover {
+  transform: translateY(-0.5rem);
+  box-shadow: 0 1.2rem 3.2rem rgba(0, 0, 0, 0.1);
+}
+
+.project-card-header {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+}
+
+.project-logo {
+  width: 5.5rem;
+  height: 5.5rem;
+  border-radius: 1.2rem;
+  object-fit: cover;
+  border: 0.2rem solid #e0e0e0;
+}
+
+.project-info {
+  flex: 1;
+}
+
+.project-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0;
+}
+
+.project-company {
+  font-size: 1.2rem;
+  color: #7f8c8d;
+  margin-top: 0.4rem;
+}
+
+.project-status {
+  margin: 2rem 0 1.2rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 1.5rem;
+}
+
+.badge {
+  padding: 1.2rem 2rem 1.2rem 2rem;
+
+  border-radius: 2rem;
+  font-size: 1.4rem;
+  font-weight: 500;
+  text-transform: capitalize;
+  color: #fff;
+  box-shadow: 0rem 0.4rem 1.2rem rgba(0, 0, 0, 0.2);
+}
+
+.status.active {
+  background-color: #f39c12;
+}
+
+.status.completed {
+  background-color: #2ecc71;
+}
+
+.status.inactive {
+  background-color: #e74c3c;
+}
+
+.priority.high {
+  background-color: #c0392b;
+}
+
+.priority.medium {
+  background-color: #3498db;
+}
+
+.priority.low {
+  background-color: #95a5a6;
+}
+
+.progress-container {
+  margin-top: auto;
+}
+
+.progress-bar {
+  background-color: #ecf0f1;
+  height: 1rem;
+  border-radius: 0.8rem;
+  overflow: hidden;
+  margin-bottom: 0.8rem;
+}
+
+.progress-fill {
+  background-color: #3498db;
+  height: 100%;
+  transition: width 0.4s ease-in-out;
+}
+
+.progress-text {
+  font-size: 1.1rem;
+  color: #555;
+  text-align: right;
+}
+.assigned-employees {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+.avatars {
+  display: flex;
+  gap: 0.8rem;
+}
+
+.employee-avatar {
+  width: 3.6rem;
+  height: 3.6rem;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 0.2rem solid #ffffff;
+  box-shadow: 0 0.1rem 0.3rem rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.employee-avatar:hover {
+  transform: scale(1.1);
+}
+
+.employee-count {
+  font-size: 1.2rem;
+  color: #666;
+  font-weight: 500;
+}
+.employee-avatar {
+  width: 3.6rem;
+  height: 3.6rem;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 0.2rem solid #ffffff;
+  box-shadow: 0 0.1rem 0.3rem rgba(0, 0, 0, 0.1);
+}

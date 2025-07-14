@@ -49,15 +49,31 @@ html {
   padding-right: 2rem;
   text-shadow: 0rem 0.4rem 0.7rem rgba(0, 0, 0, 0.2);
 }
-.profil-connecte {
-  height: 6rem;
-  width: 6rem;
-  background-color: red;
-  position: absolute;
-  top: 58rem;
-  left: 6rem;
+/* .profil-connecte {
+  height: 7rem;
+  width: 7rem;
+  background-color: #fff;
+  
+  
   box-shadow: 0rem 0.4rem 2rem rgba(0, 0, 0, 0.4);
   font-size: 2rem;
+} */
+.profil-connecte img {
+  /* height: 6.5rem;
+  width: 6.5rem;
+  border-radius: 50%; */
+  position: absolute;
+  width: 8rem;
+  height: 8rem;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 5px solid rgb(248, 244, 244);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  margin-top: -75px; /* Positionne la photo sur le background */
+  background-color: #fff;
+  margin-bottom: 1.5rem;
+  top: 65rem;
+  left: 5rem;
 }
 .deconnexion {
   font-size: 1.5rem;
@@ -534,4 +550,93 @@ html {
 .recent-taches i {
   color: #557ef0;
   margin-left: 1.4rem;
+}
+/************PROJECT CONTAINER****************************/
+.project-container {
+  margin-left: 20rem;
+}
+.projets {
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+}
+.projets h1 {
+  margin-left: 22rem;
+  margin-top: 2rem;
+  color: #e9a1a1;
+  font-weight: 700;
+  font-size: 3rem;
+}
+.projets .list-projet {
+  margin-left: 22rem;
+  color: #1d2942;
+  font-weight: 600;
+  font-size: 2rem;
+}
+@media screen and (max-width: 991px) {
+  .project-container {
+    margin-left: 6rem !important;
+  }
+  .projets {
+    margin-left: 0rem !important;
+  }
+  .projets h1,
+  h3 {
+    margin-left: 8rem !important;
+  }
+  .projets h1 {
+    font-size: 3.7rem;
+  }
+}
+/* ********************************** */
+.global-progression {
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  margin-top: 2rem;
+}
+
+.global-progression h3 {
+  margin-top: 0;
+  color: #333;
+}
+
+.progress-container {
+  margin-top: 15px;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.progress-percentage {
+  font-weight: bold;
+  color: #333;
+}
+
+.progress-status {
+  color: #666;
+}
+
+.progress-bar {
+  height: 20px;
+  background-color: #e0e0e0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress-bar .progression {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.projects-count {
+  margin-top: 8px;
+  font-size: 0.9em;
+  color: #666;
+  text-align: right;
 }

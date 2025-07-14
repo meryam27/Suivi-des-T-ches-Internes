@@ -12,6 +12,8 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import DashboardAdmin from "./pages/admin/DashboardAdmin";
 import ProjetsAdmin from "./pages/admin/ProjetsAdmin";
 import Employes from "./pages/admin/Employes";
+import Tasks from "./pages/admin/Tasks";
+import ProfilPage from "./pages/admin/ProfilPage";
 function App() {
   const role = localStorage.getItem("role");
   const location = useLocation();
@@ -115,11 +117,21 @@ function App() {
           }
         />
         <Route
+          path="/admin/taches"
+          element={
+            <>
+              <ProtectedRoute role="admin">
+                <Tasks />
+              </ProtectedRoute>
+            </>
+          }
+        />
+        <Route
           path="/admin/profil"
           element={
             <>
               <ProtectedRoute role="admin">
-                <Profil />
+                <ProfilPage />
               </ProtectedRoute>
             </>
           }

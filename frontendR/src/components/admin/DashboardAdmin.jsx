@@ -6,70 +6,72 @@ import {
   Tooltip,
   Cell,
   ResponsiveContainer,
-  Legend,
   BarChart,
   XAxis,
   YAxis,
   Bar,
 } from "recharts";
 import axios from "axios";
+import "./DashboardAdmin.css";
 
-const COLORS = ["#fdce11ff", "#74b2feff", "#34d399", "#fe8989ff"];
-const COLORS2 = ["#74b2feff", "#34d399", "#fe8989ff"];
+// Couleurs vives et modernes
+const COLORS = ["#FF6384", "#36A2EB", "#4BC0C0", "#FFCE56"];
+const COLORS2 = ["#da9bf5ff", "#53d087ff", "#fa8a7dff"];
 
 const DashboardAdminComp = () => {
   const [stats, setStats] = useState(null);
+  const [profil, setProfil] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // 🔁 Vérifie s’il y a des données en cache
-    const cached = localStorage.getItem("dashboardStats");
-    if (cached) {
-      setStats(JSON.parse(cached));
-      setIsLoading(false);
-    }
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem("token");
 
-    // 🔄 Toujours recharger à jour depuis l’API
-    axios
-      .get("http://localhost:5001/api/admin/dashboard/stats", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      })
-      .then((res) => {
-        setStats(res.data);
-        localStorage.setItem("dashboardStats", JSON.stringify(res.data));
+        const [statsRes, profilRes] = await Promise.all([
+          axios.get("http://localhost:5001/api/admin/dashboard/stats", {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          axios.get("http://localhost:5001/api/profile", {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+        ]);
+
+        setStats(statsRes.data);
+        localStorage.setItem("dashboardStats", JSON.stringify(statsRes.data));
+
+        setProfil(profilRes.data.data);
+        localStorage.setItem("profilData", JSON.stringify(profilRes.data.data));
+      } catch (err) {
+        console.error("Erreur lors du chargement des données :", err);
+      } finally {
         setIsLoading(false);
-      })
-      .catch((err) => {
-        console.error("Erreur récupération stats :", err);
-        setIsLoading(false);
-      });
+      }
+    };
+
+    fetchData();
   }, []);
 
-  if (isLoading || !stats) {
+  if (isLoading || !stats || !profil) {
     return (
-      <div style={{ textAlign: "center", padding: "50px" }}>
-        <i
-          className="fas fa-spinner fa-spin"
-          style={{ fontSize: "30px", color: "#60a5fa" }}
-        ></i>
-        <p>Chargement des statistiques...</p>
+      <div className="loading-container">
+        <div className="loading-spinner">
+          <i className="fas fa-spinner fa-spin"></i>
+          <p>Chargement des statistiques...</p>
+        </div>
       </div>
     );
   }
 
-  // 📊 Données
   const longTasksStats = stats.tasks.stats.find((s) => s.type === "long") || {};
   const dailyTasksStats = stats.tasks.dailyProgression || [];
-  console.log("acti", stats.activities);
   const pieDataDaily = [
     { name: "À faire", value: longTasksStats.pending || 0 },
     { name: "En cours", value: longTasksStats.inProgress || 0 },
     { name: "Terminée", value: longTasksStats.completed || 0 },
     { name: "En retard", value: longTasksStats.late || 0 },
   ];
-
+  console.log("long Tasks Stats:", longTasksStats);
   const projectData = stats.projects;
   const pieProject = [
     { name: "Actif", value: projectData.active || 0 },
@@ -80,144 +82,252 @@ const DashboardAdminComp = () => {
   return (
     <div className="dashboard-admin-container">
       <div className="header">
-        <div className="left">
-          <h1 className="title">Dashboard</h1>
-          <p className="text">Bienvenue dans votre espace de travail</p>
+        <div className="header-content">
+          <h1 className="title">Tableau de Bord</h1>
+          <p className="subtitle">
+            Bienvenue <span className="bienvenu-name">{profil.name}</span> dans
+            votre espace de travail
+          </p>
         </div>
-        <div className="right">
-          <i className="fa-solid fa-bell"></i>
-          <span className="notification-badge">X</span>
+        <div className="header-actions">
+          <div className="notification-icon">
+            <i className="fa-solid fa-bell"></i>
+            <span className="notification-badge">
+              {stats.notifications || 0}
+            </span>
+          </div>
         </div>
       </div>
 
-      <div className="body">
-        <div className="left">
-          <h2
-            className="mb-5 tache-journaliere"
-            style={{ fontSize: "1.78rem" }}
-          >
-            Pourcentages des tâches journalières Completées
-          </h2>
-          <ResponsiveContainer width={"100%"} height={400} className="mt-5">
-            <BarChart data={dailyTasksStats}>
-              <XAxis dataKey="date" />
-              <YAxis domain={[0, 100]} />
-              <Tooltip formatter={(v) => `${v}%`} />
-              <Bar dataKey="pourcentage" fill="#34d399" />
+      <div className="dashboard-grid">
+        <div className="main-chart">
+          <GlobalProgression stats={stats} />
+
+          <div className="chart-header">
+            <h2>Progression quotidienne</h2>
+          </div>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={dailyTasksStats} maxBarSize={50}>
+              <defs>
+                <linearGradient id="colorGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#D4B483" />
+                  <stop offset="100%" stopColor="#E6C8B0" />
+                </linearGradient>
+              </defs>
+              <XAxis
+                dataKey="date"
+                tick={{ fill: "#5A4E47" }}
+                axisLine={{ stroke: "#C7B8A1" }}
+              />
+              <YAxis
+                domain={[0, 100]}
+                tick={{ fill: "#5A4E47" }}
+                axisLine={{ stroke: "#C7B8A1" }}
+              />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: "#F5F0EC",
+                  borderColor: "#D4B483",
+                  borderRadius: "8px",
+                }}
+                formatter={(v) => [`${v}%`, "Complétion"]}
+              />
+              <Bar dataKey="pourcentage" fill="#4BC0C0" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
 
-        <div className="right">
-          {/* Tâches journalières */}
-          <div style={{ width: "100%", maxWidth: "500px", margin: "auto" }}>
-            <h3 style={{ textAlign: "center", fontSize: "1.7rem" }}>
-              Tâches Longues
-            </h3>
-            {pieDataDaily.every((d) => d.value === 0) ? (
-              <p style={{ color: "#888", textAlign: "center" }}>
-                Aucune donnée à afficher pour les tâches longues.
-              </p>
-            ) : (
-              <ResponsiveContainer width={"100%"} height={250}>
-                <PieChart>
-                  <Pie
-                    data={pieDataDaily}
-                    dataKey="value"
-                    nameKey="name"
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={98}
-                    label
-                  >
-                    {pieDataDaily.map((entry, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={COLORS[index % COLORS.length]}
-                      />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                  <Legend />
-                </PieChart>
-              </ResponsiveContainer>
-            )}
-          </div>
-
-          {/* Projets */}
-          <div style={{ width: "100%", maxWidth: "500px", margin: "auto" }}>
-            <p style={{ textAlign: "center", fontSize: "1.7rem" }}>
-              Avancement des Projets
-            </p>
-            {pieProject.every((d) => d.value === 0) ? (
-              <p style={{ color: "#888", textAlign: "center" }}>
-                Aucune donnée à afficher pour les projets.
-              </p>
-            ) : (
-              <ResponsiveContainer width={"100%"} height={250}>
-                <PieChart>
-                  <Pie
-                    data={pieProject}
-                    dataKey="value"
-                    nameKey="name"
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={98}
-                    label
-                  >
-                    {pieProject.map((entry, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={COLORS2[index % COLORS2.length]}
-                      />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                  <Legend />
-                </PieChart>
-              </ResponsiveContainer>
-            )}
-          </div>
+        <div className="side-charts">
+          <PieSection
+            title="Répartition des tâches"
+            data={pieDataDaily}
+            colors={COLORS}
+          />
+          <PieSection
+            title="Statut des projets"
+            data={pieProject}
+            colors={COLORS2}
+          />
         </div>
       </div>
 
-      <div className="footer">
-        <div>
-          <h3 className="recent-taches">
-            <i class="fa-solid fa-clock-rotate-left"></i> Les Tâches Récentes :
-          </h3>
-          {stats.activities.recent.map((el) => (
-            <Recent props={el} />
-          ))}
-        </div>
-        <div>
-          <h3 className="critical-taches ms-4">
-            <i class="fa-solid fa-triangle-exclamation"></i> Les Tâches
-            Critiques :
-          </h3>
-          {stats.activities.critical.map((el) => (
-            <Critical props={el} />
-          ))}
-        </div>
+      <div className="activity-section">
+        <ActivityCard
+          title="Activité récente"
+          icon="history"
+          data={stats.activities.recent}
+        />
+        <ActivityCard
+          title="Tâches critiques"
+          icon="exclamation-circle"
+          data={stats.activities.critical}
+          critical
+        />
       </div>
     </div>
   );
 };
 
+// Fonction personnalisée pour éviter chevauchement des labels
+const renderCustomizedLabel = ({
+  cx,
+  cy,
+  midAngle,
+  innerRadius,
+  outerRadius,
+  percent,
+  name,
+}) => {
+  const RADIAN = Math.PI / 180;
+  const radius = innerRadius + (outerRadius - innerRadius) * 1.2;
+  const x = cx + radius * Math.cos(-midAngle * RADIAN);
+  const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+  return percent > 0.05 ? (
+    <text
+      x={x}
+      y={y}
+      fill="#333"
+      textAnchor={x > cx ? "start" : "end"}
+      dominantBaseline="central"
+      fontSize={12}
+      fontWeight="bold"
+    >
+      {`${name} ${(percent * 100).toFixed(0)}%`}
+    </text>
+  ) : null;
+};
+
+function PieSection({ title, data, colors }) {
+  return (
+    <div className="pie-chart-container">
+      <h3>{title}</h3>
+      {data.every((d) => d.value === 0) ? (
+        <div className="empty-state">
+          <i className="fas fa-chart-pie"></i>
+          <p>Aucune donnée disponible</p>
+        </div>
+      ) : (
+        <ResponsiveContainer width="100%" height={250}>
+          <PieChart>
+            <Pie
+              data={data}
+              dataKey="value"
+              nameKey="name"
+              cx="50%"
+              cy="50%"
+              outerRadius={80}
+              innerRadius={50}
+              labelLine={false}
+              label={renderCustomizedLabel}
+            >
+              {data.map((entry, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={colors[index % colors.length]}
+                  stroke="#F5F0EC"
+                />
+              ))}
+            </Pie>
+            <Tooltip
+              contentStyle={{
+                backgroundColor: "#F5F0EC",
+                borderColor: "#D4B483",
+                borderRadius: "8px",
+              }}
+              formatter={(value, name) => [`${value}`, name]}
+            />
+          </PieChart>
+        </ResponsiveContainer>
+      )}
+    </div>
+  );
+}
+
+function ActivityCard({ title, icon, data, critical }) {
+  return (
+    <div className={`activity-card ${critical ? "critical" : "recent"}`}>
+      <div className="activity-header">
+        <i className={`fas fa-${icon}`}></i>
+        <h3>{title}</h3>
+      </div>
+      <div className="activity-list">
+        {data.map((el) => (
+          <div
+            className={`activity-item ${critical ? "critical" : ""}`}
+            key={el._id}
+          >
+            <div className="activity-icon">
+              <i
+                className={`fas ${
+                  critical ? "fa-exclamation-triangle" : "fa-check-circle"
+                }`}
+              ></i>
+            </div>
+            <div className="activity-content">
+              <h4 className="activity-title">{el.title}</h4>
+              <p className="activity-description">{el.description}</p>
+              <div className="activity-meta">
+                {critical ? (
+                  <>
+                    <span className="activity-priority">
+                      Priorité: {el.priority}
+                    </span>
+                    <span className="activity-deadline">
+                      Échéance: {new Date(el.deadline).toLocaleDateString()}
+                    </span>
+                  </>
+                ) : (
+                  <span className="activity-date">
+                    {new Date(el.date).toLocaleString()}
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function GlobalProgression({ stats }) {
+  const progression = stats?.projects?.overallProgression || 0;
+  return (
+    <div className="progress-card">
+      <div className="progress-header">
+        <h3>Progression globale</h3>
+        <div className="progress-percentage">
+          {Math.round(progression)}%{" "}
+          <span>
+            {progression === 100 ? "🎉" : progression > 70 ? "👍" : "👌"}
+          </span>
+        </div>
+      </div>
+      <div className="progress-bar-container">
+        <div
+          className="progress-bar-fill"
+          style={{
+            width: `${progression}%`,
+            background: ` #75c2f5ff  `,
+          }}
+        ></div>
+      </div>
+      <div className="progress-footer">
+        <span className="progress-stats">
+          {stats?.projects?.completed || 0} / {stats?.projects?.total || 0}{" "}
+          projets complétés
+        </span>
+        <span className="progress-status">
+          {progression === 0
+            ? "Prêt à commencer"
+            : progression < 100
+            ? "En cours de réalisation"
+            : "Mission accomplie!"}
+        </span>
+      </div>
+    </div>
+  );
+}
+
 export default DashboardAdminComp;
-function Recent({ props }) {
-  return (
-    <div className="recent-dcontainer">
-      <div className="tache-title">{props.title}</div>
-      <div className="tache-description">{props.description}</div>
-    </div>
-  );
-}
-function Critical({ props }) {
-  return (
-    <div className="critical-dcontainer">
-      <div className="tache-title">{props.title}</div>
-      <div className="tache-description">{props.description}</div>
-    </div>
-  );
-}

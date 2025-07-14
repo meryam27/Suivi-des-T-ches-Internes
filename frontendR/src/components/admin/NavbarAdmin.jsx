@@ -1,12 +1,24 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import logo from "../../assets/images/logo.png";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { NavLink } from "react-router-dom";
-
+import axios from "axios";
+import defaultPhoto from "../../assets/images/profil-default.jpeg";
 const NavbarAdmin = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [profil, setProfil] = useState([]);
   const toggleMenu = () => setMenuOpen(!menuOpen);
-
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    axios
+      .get("http://localhost:5001/api/profil", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => setProfil(res.data.data))
+      .catch((err) => console.log("ERROR : ", err));
+  }, []);
   return (
     <>
       {/* Bouton menu pour petits écrans */}
@@ -19,7 +31,10 @@ const NavbarAdmin = () => {
       </button>
 
       {/* Barre de navigation principale */}
-      <div className={`navbar ${menuOpen ? "menu-open" : ""}`}>
+      <div
+        className={`navbar ${menuOpen ? "menu-open" : ""}`}
+        style={{ zIndex: "100" }}
+      >
         <div className="logo">
           <img src={logo} alt="logo" className="logo-entreprise" />
         </div>
@@ -57,7 +72,7 @@ const NavbarAdmin = () => {
           </NavLink>
         </div>
         <div className="profil-connecte text-white rounded-circle d-flex justify-content-center align-items-center">
-          NP
+          <img src={profil.profilePhoto || defaultPhoto} />
         </div>
         <div className="deconnexion text-body-secondary">
           <button>Déconnexion</button>
