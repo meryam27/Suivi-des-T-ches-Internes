@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ProjectCard from "../../components/admin/ProjectCard";
+import "../../index.css"; // Assurez-vous que le chemin est correct pour le CSS global
 // si tu veux un style global à cette page
 
 const ProjetsAdmin = () => {
@@ -32,8 +33,7 @@ const ProjetsAdmin = () => {
 
   return (
     <div className="projets">
-      <h1>Projets</h1>
-      <h3 className="list-projet">Liste des projets :</h3>
+      <h1 className="projet-page-title">Projets</h1>
       <div
         style={{
           display: "flex",

@@ -8,7 +8,7 @@ import Prioritaires from "./pages/employe/Prioritaires";
 import Profil from "./pages/employe/Profil";
 import Login from "./pages/login";
 import NavbarAdmin from "./components/admin/NavbarAdmin";
-import ProtectedRoute from "./components/ProtectedRoute";
+import ProtectedRoute from "./components/common/ProtectedRoute";
 import DashboardAdmin from "./pages/admin/DashboardAdmin";
 import ProjetsAdmin from "./pages/admin/ProjetsAdmin";
 import Employes from "./pages/admin/Employes";

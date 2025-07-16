@@ -58,11 +58,11 @@ html {
   justify-content: space-between;
   gap: 1rem;
   flex-wrap: wrap;
-  padding: 1.5rem;
+  padding: 1.2rem;
 }
 
 .badge {
-  padding: 1.2rem 2rem 1.2rem 2rem;
+  padding: 1rem 1.3rem 1rem 1.3rem;
 
   border-radius: 2rem;
   font-size: 1.4rem;

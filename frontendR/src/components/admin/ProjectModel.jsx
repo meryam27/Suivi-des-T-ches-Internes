@@ -3,21 +3,42 @@ import "./ProjectModal.css";
 import defaultProject from "../../assets/images/project-default.jpg";
 import defaultProfil from "../../assets/images/profil-default.jpeg";
 import axios from "axios";
+
 const ProjectModal = ({ project, onClose }) => {
-  const [detailProject, setDetailProject] = useState({});
+  const [detailProject, setDetailProject] = useState(null);
+
   useEffect(() => {
+    if (!project || !project._id) return;
+
     axios
-      .get("http://localhost:5001/api/admin/projectDetails", {
+      .get(`http://localhost:5001/api/admin/projectDetails/${project._id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       })
       .then((res) => {
-        setDetailProject(res.data),
-          console.log("Project details", detailProject);
+        setDetailProject(res.data);
       })
-      .catch((err) => console.error("Error fetching project details:", err));
-  }, []);
+      .catch((err) => {
+        console.error("Error fetching project details:", err.message);
+      });
+  }, [project]);
+
+  if (!detailProject) return null; // attend que les données soient chargées
+
+  const {
+    assignedEmployees = [],
+    city,
+    company,
+    description,
+    logo,
+    name,
+    priority,
+    progression,
+    startDate,
+    status,
+    _id,
+  } = detailProject;
 
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -28,34 +49,32 @@ const ProjectModal = ({ project, onClose }) => {
 
         <div className="modal-header">
           <img
-            src={project.logo || defaultProject}
+            src={logo || defaultProject}
             alt="Logo du projet"
             className="modal-logo"
           />
           <div>
-            <h2 className="modal-title">{project.name}</h2>
+            <h2 className="modal-title">{name}</h2>
             <p className="modal-subtitle">
-              {project.company} • {project.city}
+              {company} • {city}
             </p>
+
+            <p className="modal-subtitle small">Début : {startDate}</p>
           </div>
         </div>
 
         <p className="modal-description">
-          {project.description || "Aucune description disponible."}
+          {description || "Aucune description disponible."}
         </p>
 
         <div className="modal-section">
           <strong>Status :</strong>{" "}
-          <span className={`badge status ${project.status}`}>
-            {project.status}
-          </span>
+          <span className={`badge status ${status}`}>{status}</span>
         </div>
 
         <div className="modal-section">
           <strong>Priorité :</strong>{" "}
-          <span className={`badge priority ${project.priority}`}>
-            {project.priority}
-          </span>
+          <span className={`badge priority ${priority}`}>{priority}</span>
         </div>
 
         <div className="modal-section">
@@ -63,18 +82,17 @@ const ProjectModal = ({ project, onClose }) => {
           <div className="progress-bar">
             <div
               className="progress-fill"
-              style={{ width: `${project.progression}%` }}
+              style={{ width: `${progression}%` }}
             ></div>
           </div>
-          <span>{project.progression}%</span>
+          <span>{progression}%</span>
         </div>
 
         <div className="modal-section">
           <strong>Équipe assignée :</strong>
           <div className="modal-avatars">
-            {Array.isArray(project.assignedEmployees) &&
-            project.assignedEmployees.length > 0 ? (
-              project.assignedEmployees.map((photo, index) => {
+            {assignedEmployees.length > 0 ? (
+              assignedEmployees.map((photo, index) => {
                 const isValid =
                   photo && typeof photo === "string" && photo.trim() !== "";
                 return (
@@ -95,7 +113,7 @@ const ProjectModal = ({ project, onClose }) => {
             )}
           </div>
           <span className="employee-count">
-            {project.assignedEmployees?.length || 0} membre(s)
+            {assignedEmployees.length} membre(s)
           </span>
         </div>
       </div>

@@ -4,14 +4,16 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import { NavLink } from "react-router-dom";
 import axios from "axios";
 import defaultPhoto from "../../assets/images/profil-default.jpeg";
+
 const NavbarAdmin = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [profil, setProfil] = useState([]);
+  const [profil, setProfil] = useState({});
   const toggleMenu = () => setMenuOpen(!menuOpen);
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     axios
-      .get("http://localhost:5001/api/profil", {
+      .get("http://localhost:5001/api/profile", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -19,12 +21,18 @@ const NavbarAdmin = () => {
       .then((res) => setProfil(res.data.data))
       .catch((err) => console.log("ERROR : ", err));
   }, []);
+
+  const profileImageSrc =
+    profil.profilePhoto && profil.profilePhoto !== "default-avatar.png"
+      ? `http://localhost:5001/uploads/${profil.profilePhoto}`
+      : defaultPhoto;
+
   return (
     <>
       {/* Bouton menu pour petits écrans */}
       <button className="toggle-button d-lg-none" onClick={toggleMenu}>
         {menuOpen ? (
-          <i class="fa-solid fa-xmark"></i>
+          <i className="fa-solid fa-xmark"></i>
         ) : (
           <i className="fas fa-bars"></i>
         )}
@@ -55,7 +63,7 @@ const NavbarAdmin = () => {
             to="/admin/taches"
             className={({ isActive }) => (isActive ? "active" : "not-active")}
           >
-            <i class="fa-solid fa-list-check"></i>
+            <i className="fa-solid fa-list-check"></i>
           </NavLink>
           <NavLink
             to="/admin/employes"
@@ -63,7 +71,6 @@ const NavbarAdmin = () => {
           >
             <i className="fa-solid fa-users"></i>
           </NavLink>
-
           <NavLink
             to="/admin/profil"
             className={({ isActive }) => (isActive ? "active" : "not-active")}
@@ -71,9 +78,11 @@ const NavbarAdmin = () => {
             <i className="fa-solid fa-address-card"></i>
           </NavLink>
         </div>
+
         <div className="profil-connecte text-white rounded-circle d-flex justify-content-center align-items-center">
-          <img src={profil.profilePhoto || defaultPhoto} />
+          <img src={profileImageSrc} alt="Profile" />
         </div>
+
         <div className="deconnexion text-body-secondary">
           <button>Déconnexion</button>
         </div>

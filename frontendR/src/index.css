@@ -560,12 +560,26 @@ html {
   gap: 1rem;
   flex-direction: column;
 }
-.projets h1 {
-  margin-left: 22rem;
+.projet-page-title {
+  margin-left: 23rem;
   margin-top: 2rem;
-  color: #e9a1a1;
+  color: #f7aab0;
   font-weight: 700;
   font-size: 3rem;
+  position: relative;
+  display: inline-block;
+  font-weight: 700;
+  letter-spacing: 0.1rem;
+}
+.projet-page-title::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 7%;
+  height: 2px;
+  background: linear-gradient(to right, #2b3b65, #caedff); /* Rouge vers bleu */
+  border-radius: 2px;
 }
 .projets .list-projet {
   margin-left: 22rem;
@@ -639,4 +653,15 @@ html {
   font-size: 0.9em;
   color: #666;
   text-align: right;
+}
+/***************PROJET PAGE *****************/
+.projet-page-title ::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 70%;
+  height: 2px;
+  background: linear-gradient(to right, #2b3b65, #caedff); /* Rouge vers bleu */
+  border-radius: 2px;
 }
