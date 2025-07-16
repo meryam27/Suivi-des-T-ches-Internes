@@ -23,7 +23,7 @@ const ProjectModal = ({ project, onClose }) => {
         console.error("Error fetching project details:", err.message);
       });
   }, [project]);
-  console.log("Project details:", detailProject);
+
   if (!detailProject) return null; // attend que les données soient chargées
 
   const {
@@ -39,7 +39,7 @@ const ProjectModal = ({ project, onClose }) => {
     status,
     _id,
   } = detailProject;
-
+  console.log("Project details:", detailProject);
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -49,32 +49,36 @@ const ProjectModal = ({ project, onClose }) => {
 
         <div className="modal-header">
           <img
-            src={logo || defaultProject}
+            src={project.logoUrl || defaultProject}
             alt="Logo du projet"
             className="modal-logo"
           />
           <div className="modal-title-container-projet">
-            <h2 className="modal-title">{name}</h2>
+            <h2 className="modal-title">{project.name}</h2>
             <p className="modal-subtitle">
-              {company} • {city}
+              {project.company} • {project.city}
             </p>
 
-            <p className="modal-subtitle small">Début : {startDate}</p>
+            <p className="modal-subtitle small">Début : {project.startDate}</p>
           </div>
         </div>
 
         <p className="modal-description">
-          {description || "Aucune description disponible."}
+          {project.description || "Aucune description disponible."}
         </p>
 
         <div className="modal-section">
           <strong>Status :</strong>{" "}
-          <span className={`badge status ${status}`}>{status}</span>
+          <span className={`badge status ${project.status}`}>
+            {project.status}
+          </span>
         </div>
 
         <div className="modal-section">
           <strong>Priorité :</strong>{" "}
-          <span className={`badge priority ${priority}`}>{priority}</span>
+          <span className={`badge priority ${project.priority}`}>
+            {project.priority}
+          </span>
         </div>
 
         <div className="modal-section">
@@ -82,10 +86,10 @@ const ProjectModal = ({ project, onClose }) => {
           <div className="progress-bar">
             <div
               className="progress-fill"
-              style={{ width: `${progression}%` }}
+              style={{ width: `${project.progression}%` }}
             ></div>
           </div>
-          <span>{progression}%</span>
+          <span>{project.progression}%</span>
         </div>
 
         <div className="modal-section">

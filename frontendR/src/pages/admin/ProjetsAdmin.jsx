@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ProjectCard from "../../components/admin/ProjectCard";
 import { FiSearch, FiPlus } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 import "../../index.css";
 
 const ProjetsAdmin = () => {
@@ -24,25 +25,29 @@ const ProjetsAdmin = () => {
     logo: null,
     priority: "medium",
   });
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    axios
-      .get("http://localhost:5001/api/admin/projects/cards", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((res) => {
+    const fetchProjects = async () => {
+      const token = localStorage.getItem("token");
+      try {
+        const res = await axios.get(
+          "http://localhost:5001/api/admin/projects/cards",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         setProjects(res.data);
         setFilteredProjects(res.data);
         setIsLoading(false);
-      })
-      .catch((err) => {
+      } catch (err) {
         console.error("Erreur récupération projets :", err);
         setIsLoading(false);
-      });
+      }
+    };
+    fetchProjects();
   }, []);
 
   useEffect(() => {
@@ -103,30 +108,73 @@ const ProjetsAdmin = () => {
     setNewProject((prev) => ({ ...prev, logo: e.target.files[0] }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Nouveau projet:", newProject);
-    setShowModal(false);
-    setNewProject({
-      name: "",
-      description: "",
-      company: "",
-      city: "",
-      status: "active",
-      startDate: "",
-      employees: [],
-      logo: null,
-      priority: "medium",
+    setError(null);
+    setSuccess(null);
+
+    const token = localStorage.getItem("token");
+    const formData = new FormData();
+
+    formData.append("name", newProject.name);
+    formData.append("description", newProject.description);
+    formData.append("company", newProject.company);
+    formData.append("city", newProject.city);
+    formData.append("status", newProject.status);
+    formData.append("startDate", newProject.startDate);
+    formData.append("priority", newProject.priority);
+
+    newProject.employees.forEach((employee) => {
+      formData.append("employees", employee);
     });
+
+    if (newProject.logo) {
+      formData.append("logo", newProject.logo);
+    }
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5001/api/admin/projects/ajout",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      setSuccess("Projet ajouté avec succès!");
+      setProjects([...projects, response.data.project]);
+      setFilteredProjects([...projects, response.data.project]);
+
+      setNewProject({
+        name: "",
+        description: "",
+        company: "",
+        city: "",
+        status: "active",
+        startDate: "",
+        employees: [],
+        logo: null,
+
+        priority: "medium",
+      });
+
+      setTimeout(() => {
+        setShowModal(false);
+        setSuccess(null);
+      }, 2000);
+    } catch (err) {
+      console.error("Erreur lors de l'ajout du projet:", err);
+      setError(
+        err.response?.data?.message || "Erreur lors de l'ajout du projet"
+      );
+    }
   };
 
-  const token = localStorage.getItem("token");
   const navigateToEmployees = () => {
-    axios.get("http://localhost/api/admin/employees", {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
+    navigate("/admin/employees");
   };
 
   if (isLoading) {
@@ -135,12 +183,10 @@ const ProjetsAdmin = () => {
 
   return (
     <div className="projets">
-      {/* Bouton flottant */}
       <button className="add-project-btn" onClick={() => setShowModal(true)}>
         <FiPlus className="add-icon" />
       </button>
 
-      {/* Modal */}
       {showModal && (
         <div className="modal-overlay">
           <div className="project-modal">
@@ -152,6 +198,9 @@ const ProjetsAdmin = () => {
             </div>
 
             <form onSubmit={handleSubmit} className="project-form">
+              {error && <div className="error-message">{error}</div>}
+              {success && <div className="success-message">{success}</div>}
+
               <div className="form-group">
                 <label>Nom du projet</label>
                 <input
