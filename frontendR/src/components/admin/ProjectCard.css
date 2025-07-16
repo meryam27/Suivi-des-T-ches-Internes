@@ -2,13 +2,14 @@ html {
   font-size: 62.5%;
 }
 
+/* Styles existants des cartes de projet */
 .project-card {
   width: 26rem;
   min-height: 30rem;
   background-color: #ffffff;
   border-radius: 1.6rem;
   box-shadow: 0 0.8rem 2.4rem rgba(0, 0, 0, 0.06);
-  padding: 2rem;
+  padding: 1.2rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -25,6 +26,7 @@ html {
   display: flex;
   align-items: center;
   gap: 1.6rem;
+  margin-bottom: 3rem;
 }
 
 .project-logo {
@@ -40,7 +42,7 @@ html {
 }
 
 .project-title {
-  font-size: 2rem;
+  font-size: 1.68rem;
   font-weight: 700;
   color: #2c3e50;
   margin: 0;
@@ -63,7 +65,6 @@ html {
 
 .badge {
   padding: 1rem 1.3rem 1rem 1.3rem;
-
   border-radius: 2rem;
   font-size: 1.4rem;
   font-weight: 500;
@@ -119,6 +120,7 @@ html {
   color: #555;
   text-align: right;
 }
+
 .assigned-employees {
   display: flex;
   justify-content: space-between;
@@ -150,11 +152,368 @@ html {
   color: #666;
   font-weight: 500;
 }
-.employee-avatar {
-  width: 3.6rem;
-  height: 3.6rem;
+
+/* Nouveaux styles pour la page projets */
+.projets {
+  position: relative;
+  padding: 2rem;
+}
+
+.projet-page-title {
+  font-size: 2.4rem;
+  color: #2c3e50;
+  margin-bottom: 2rem;
+}
+
+.search-filter-container {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.search-wrapper {
+  position: relative;
+  flex: 1;
+  min-width: 25rem;
+}
+
+.search-icon {
+  position: absolute;
+  left: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #7f8c8d;
+  font-size: 1.8rem;
+}
+
+.search-input {
+  width: 100%;
+  padding: 1.2rem 1.5rem 1.2rem 4rem;
+  border: none;
+  border-radius: 3rem;
+  background-color: #f5f7fa;
+  font-size: 1.4rem;
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  background-color: #fff;
+  box-shadow: 0 0 0 2px #3498db;
+}
+
+.filter-wrapper {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.custom-select {
+  position: relative;
+}
+
+.filter-select,
+.sort-select {
+  padding: 1.2rem 3rem 1.2rem 1.5rem;
+  border: none;
+  border-radius: 3rem;
+  background-color: #f5f7fa;
+  font-size: 1.4rem;
+  appearance: none;
+  cursor: pointer;
+  min-width: 18rem;
+}
+
+.custom-select::after {
+  content: "▼";
+  position: absolute;
+  right: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #7f8c8d;
+  font-size: 1rem;
+}
+
+.project-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(26rem, 1fr));
+  gap: 2rem;
+  padding: 1rem;
+}
+
+.no-projects {
+  font-size: 1.6rem;
+  color: #7f8c8d;
+  text-align: center;
+  grid-column: 1 / -1;
+}
+
+/* Styles pour le bouton flottant */
+.add-project-btn {
+  position: fixed;
+  bottom: 3rem;
+  right: 3rem;
+  width: 6rem;
+  height: 6rem;
   border-radius: 50%;
-  object-fit: cover;
-  border: 0.2rem solid #ffffff;
-  box-shadow: 0 0.1rem 0.3rem rgba(0, 0, 0, 0.1);
+  background-color: rgb(249, 155, 155);
+  color: white;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 0.4rem 1.2rem rgba(0, 0, 0, 0.2);
+  z-index: 100;
+  transition: all 0.3s ease;
+}
+
+.add-project-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0.6rem 1.5rem rgba(0, 0, 0, 0.3);
+}
+
+.add-icon {
+  font-size: 2.4rem;
+}
+
+/* Styles pour le modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(0.5rem);
+}
+
+.project-modal {
+  background-color: white;
+  border-radius: 1.2rem;
+  width: 90%;
+  max-width: 60rem;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.2);
+  animation: modalFadeIn 0.3s ease;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(2rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem;
+  border-bottom: 0.1rem solid #eee;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 2rem;
+  color: #2c3e50;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  color: #7f8c8d;
+  transition: color 0.2s;
+}
+
+.close-btn:hover {
+  color: #2c3e50;
+}
+
+.project-form {
+  padding: 2rem;
+}
+
+.form-group {
+  margin-bottom: 2rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.8rem;
+  font-size: 1.4rem;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 1.2rem 1.5rem;
+  border: 0.1rem solid #ddd;
+  border-radius: 0.8rem;
+  font-size: 1.4rem;
+  transition: all 0.3s ease;
+  background-color: #fff;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: rgb(29, 16, 95);
+  box-shadow: 0 0 0 0.2rem rgba(29, 16, 95, 0.222);
+}
+
+.form-group textarea {
+  min-height: 10rem;
+  resize: vertical;
+}
+
+.form-row {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
+.employee-select-btn {
+  width: 100%;
+  padding: 1.2rem;
+  background-color: #f5f7fa;
+  border: 0.1rem dashed #95a5a6;
+  border-radius: 0.8rem;
+  color: #2c3e50;
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.employee-select-btn:hover {
+  background-color: #e0e7ff;
+  border-color: rgb(249, 155, 155);
+  color: ;
+}
+
+.file-input-container {
+  position: relative;
+}
+
+.file-input {
+  position: absolute;
+  opacity: 0;
+  width: 0.1rem;
+  height: 0.1rem;
+}
+
+.file-input-label {
+  display: block;
+  padding: 1.2rem 1.5rem;
+  background-color: #fff;
+  border: 0.1rem dashed #95a5a6;
+  border-radius: 0.8rem;
+  color: #2c3e50;
+  font-size: 1.4rem;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.file-input-label:hover {
+  background-color: #e0e7ff;
+  border-color: rgb(249, 155, 155);
+  color: rgb(249, 155, 155);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+
+.cancel-btn,
+.submit-btn {
+  padding: 1.2rem 2.5rem;
+  border-radius: 0.8rem;
+  font-size: 1.4rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cancel-btn {
+  background-color: #f5f7fa;
+  color: #2c3e50;
+  border: none;
+}
+
+.cancel-btn:hover {
+  background-color: #e0e0e0;
+}
+
+.submit-btn {
+  background-color: rgb(249, 155, 155);
+  color: white;
+  border: none;
+}
+
+.submit-btn:hover {
+  background-color: rgb(249, 155, 155);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .search-filter-container {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .search-wrapper {
+    width: 100%;
+    min-width: auto;
+  }
+
+  .filter-wrapper {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .custom-select {
+    flex: 1;
+    min-width: auto;
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .add-project-btn {
+    width: 5rem;
+    height: 5rem;
+    bottom: 2rem;
+    right: 2rem;
+  }
+
+  .add-icon {
+    font-size: 2rem;
+  }
 }

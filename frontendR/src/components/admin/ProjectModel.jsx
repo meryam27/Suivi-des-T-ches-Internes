@@ -11,7 +11,7 @@ const ProjectModal = ({ project, onClose }) => {
     if (!project || !project._id) return;
 
     axios
-      .get(`http://localhost:5001/api/admin/projectDetails/${project._id}`, {
+      .get(`http://localhost:5001/api/admin/projects/${project._id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -23,7 +23,7 @@ const ProjectModal = ({ project, onClose }) => {
         console.error("Error fetching project details:", err.message);
       });
   }, [project]);
-
+  console.log("Project details:", detailProject);
   if (!detailProject) return null; // attend que les données soient chargées
 
   const {
@@ -53,7 +53,7 @@ const ProjectModal = ({ project, onClose }) => {
             alt="Logo du projet"
             className="modal-logo"
           />
-          <div>
+          <div className="modal-title-container-projet">
             <h2 className="modal-title">{name}</h2>
             <p className="modal-subtitle">
               {company} • {city}
@@ -122,3 +122,4 @@ const ProjectModal = ({ project, onClose }) => {
 };
 
 export default ProjectModal;
+////////////////////////////////////////////////

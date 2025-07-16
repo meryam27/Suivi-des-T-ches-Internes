@@ -7,6 +7,9 @@ html {
   font-size: 62.5%;
 }
 /**********NAVBAR**************/
+body {
+  background-color: #f8fafc;
+}
 .navbar {
   height: 100vh;
   width: 20rem;
@@ -655,13 +658,192 @@ html {
   text-align: right;
 }
 /***************PROJET PAGE *****************/
-.projet-page-title ::after {
-  content: "";
+/* Dans votre fichier CSS */
+/* Conteneur principal */
+/* Conteneur principal */
+.search-filter-container {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1rem 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  margin: 1.5rem 2rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-left: 21rem;
+  padding-right: 4rem;
+  padding-left: 2rem;
+}
+
+.search-filter-container:hover {
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+}
+
+/* Barre de recherche */
+.search-wrapper {
+  position: relative;
+  flex: 1;
+  max-width: 350px;
+}
+
+.search-icon {
   position: absolute;
-  bottom: -8px;
-  left: 0;
-  width: 70%;
-  height: 2px;
-  background: linear-gradient(to right, #2b3b65, #caedff); /* Rouge vers bleu */
-  border-radius: 2px;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #64748b;
+  font-size: 1.3rem;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.8rem 1rem 0.8rem 3rem;
+  border: none;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  color: #334155;
+  background: rgba(241, 245, 249, 0.6);
+  transition: all 0.3s ease;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.search-input:focus {
+  outline: none;
+  background: white;
+  box-shadow: 0 0 0 2px #6366f1, inset 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.search-input::placeholder {
+  color: #94a3b8;
+}
+
+/* Conteneur des filtres */
+.filter-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  font-size: 1.3rem;
+}
+
+/* Custom select styles */
+.custom-select {
+  position: relative;
+  min-width: 160px;
+  font-size: 1.3rem;
+}
+
+.filter-select,
+.sort-select {
+  width: 100%;
+  padding: 0.8rem 1.5rem 0.8rem 1rem;
+  border: none;
+  border-radius: 12px;
+  background: rgba(241, 245, 249, 0.6);
+  color: #334155;
+
+  cursor: pointer;
+  appearance: none;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  font-size: 1.3rem;
+}
+
+.filter-select:hover,
+.sort-select:hover {
+  background: rgba(241, 245, 249, 0.9);
+}
+
+.filter-select:focus,
+.sort-select:focus {
+  outline: none;
+  background: white;
+  box-shadow: 0 0 0 2px #6366f1, inset 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.select-arrow {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #64748b;
+}
+
+/* Options styling */
+option {
+  padding: 0.5rem;
+  background: white;
+  color: #334155;
+}
+
+option[value="active"] {
+  color: #10b981;
+}
+option[value="inactive"] {
+  color: #64748b;
+}
+option[value="completed"] {
+  color: #3b82f6;
+}
+option[value="high"] {
+  color: #ef4444;
+}
+option[value="medium"] {
+  color: #f59e0b;
+}
+option[value="low"] {
+  color: #10b981;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+  .search-filter-container {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  .search-wrapper {
+    max-width: 100%;
+  }
+
+  .filter-wrapper {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .custom-select {
+    flex: 1;
+    min-width: 120px;
+  }
+}
+
+@media (max-width: 991px) {
+  .filter-wrapper {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .custom-select {
+    width: 100%;
+  }
+
+  .search-filter-container {
+    margin-left: 6rem;
+    padding: 1.2rem;
+    border-radius: 12px;
+  }
+}
+.custom-select option {
+  font-size: 1.3rem;
+}
+.sort-select {
+  padding-left: 2rem;
+}
+.filter-select .all-priority {
+  font-size: 1.3rem;
 }

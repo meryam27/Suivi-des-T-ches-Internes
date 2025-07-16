@@ -1,3 +1,4 @@
+/************************/
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -46,8 +47,9 @@
 .modal-header {
   display: flex;
   align-items: center;
-  gap: 6rem;
+  gap: 2rem;
   margin-bottom: 1rem;
+  justify-content: space-around;
 }
 
 .modal-logo {
@@ -67,6 +69,13 @@
   font-size: 1.5rem;
   color: #888;
   margin-top: 0.4rem;
+}
+.modal-title-container-projet {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-right: 6rem;
 }
 
 .modal-description {
@@ -117,4 +126,88 @@ strong {
   border: 0.2rem solid #fff;
   box-shadow: 0 0.2rem 0.6rem rgba(0, 0, 0, 0.15);
   margin-right: 0.6rem;
+}
+/* Nouveaux styles pour la recherche et le filtre */
+.search-filter-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.search-input-wrapper {
+  position: relative;
+  flex-grow: 1;
+  min-width: 250px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #1e3a8a;
+  z-index: 2;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 2.5rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  background-color: white;
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #1e3a8a;
+  box-shadow: 0 0 0 2px rgba(30, 58, 138, 0.2);
+}
+
+.filter-dropdown {
+  position: relative;
+  min-width: 180px;
+}
+
+.filter-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #1e3a8a;
+  z-index: 2;
+}
+
+.filter-select {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 2.5rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  background-color: white;
+  appearance: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.filter-select:focus {
+  outline: none;
+  border-color: #1e3a8a;
+  box-shadow: 0 0 0 2px rgba(30, 58, 138, 0.2);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .search-filter-container {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .search-input-wrapper,
+  .filter-dropdown {
+    width: 100%;
+  }
 }
