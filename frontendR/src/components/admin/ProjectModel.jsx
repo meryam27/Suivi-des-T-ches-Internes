@@ -17,29 +17,29 @@ const ProjectModal = ({ project, onClose }) => {
         },
       })
       .then((res) => {
-        setDetailProject(res.data);
+        setDetailProject(res.data.data); // Pas besoin de .data après !
       })
       .catch((err) => {
-        console.error("Error fetching project details:", err.message);
+        console.error("Erreur lors du chargement du projet:", err.message);
       });
   }, [project]);
 
-  if (!detailProject) return null; // attend que les données soient chargées
+  if (!detailProject) return null;
 
+  // destructuration directe
   const {
     assignedEmployees = [],
     city,
     company,
     description,
-    logo,
+    logoUrl,
     name,
     priority,
     progression,
     startDate,
     status,
-    _id,
   } = detailProject;
-  console.log("Project details:", detailProject);
+
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -49,36 +49,31 @@ const ProjectModal = ({ project, onClose }) => {
 
         <div className="modal-header">
           <img
-            src={project.logoUrl || defaultProject}
+            src={logoUrl || defaultProject}
             alt="Logo du projet"
             className="modal-logo"
           />
           <div className="modal-title-container-projet">
-            <h2 className="modal-title">{project.name}</h2>
+            <h2 className="modal-title">{name}</h2>
             <p className="modal-subtitle">
-              {project.company} • {project.city}
+              {company} • {city}
             </p>
-
-            <p className="modal-subtitle small">Début : {project.startDate}</p>
+            <p className="modal-subtitle small">Début : {startDate}</p>
           </div>
         </div>
 
         <p className="modal-description">
-          {project.description || "Aucune description disponible."}
+          {description || "Aucune description disponible."}
         </p>
 
         <div className="modal-section">
           <strong>Status :</strong>{" "}
-          <span className={`badge status ${project.status}`}>
-            {project.status}
-          </span>
+          <span className={`badge status ${status}`}>{status}</span>
         </div>
 
         <div className="modal-section">
           <strong>Priorité :</strong>{" "}
-          <span className={`badge priority ${project.priority}`}>
-            {project.priority}
-          </span>
+          <span className={`badge priority ${priority}`}>{priority}</span>
         </div>
 
         <div className="modal-section">
@@ -86,10 +81,10 @@ const ProjectModal = ({ project, onClose }) => {
           <div className="progress-bar">
             <div
               className="progress-fill"
-              style={{ width: `${project.progression}%` }}
+              style={{ width: `${progression}%` }}
             ></div>
           </div>
-          <span>{project.progression}%</span>
+          <span>{progression}%</span>
         </div>
 
         <div className="modal-section">
@@ -126,4 +121,3 @@ const ProjectModal = ({ project, onClose }) => {
 };
 
 export default ProjectModal;
-////////////////////////////////////////////////
