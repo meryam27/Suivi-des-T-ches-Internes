@@ -847,3 +847,35 @@ option[value="low"] {
 .filter-select .all-priority {
   font-size: 1.3rem;
 }
+/*************************FORMULAIR ******************/
+/* Styles pour le header */
+/* Styles pour le header */
+.header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+/* Styles pour le bouton d'ajout */
+.add-project-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 15px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.add-project-btn:hover {
+  background-color: #3e8e41;
+}
+
+.add-icon {
+  font-size: 18px;
+}

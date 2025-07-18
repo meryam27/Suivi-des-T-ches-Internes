@@ -89,31 +89,41 @@ const ProjectModal = ({ project, onClose }) => {
 
         <div className="modal-section">
           <strong>Équipe assignée :</strong>
-          <div className="modal-avatars">
+          <div className="team-container">
             {assignedEmployees.length > 0 ? (
-              assignedEmployees.map((photo, index) => {
-                const isValid =
-                  photo && typeof photo === "string" && photo.trim() !== "";
-                return (
-                  <img
-                    key={index}
-                    src={isValid ? photo : defaultProfil}
-                    alt="Employé"
-                    className="modal-avatar"
-                  />
-                );
-              })
+              <>
+                <div className="team-scroll-container">
+                  <div className="team-grid">
+                    {assignedEmployees.map((employee, index) => (
+                      <div key={index} className="team-card">
+                        <div className="team-card-content">
+                          <div className="employee-avatar-container">
+                            <img
+                              src={employee.profilePhoto || defaultProfil}
+                              alt={employee.name}
+                              className="team-avatar"
+                            />
+                          </div>
+                          <div className="employee-info">
+                            <h4>{employee.name}</h4>
+                            <p className="position">{employee.position}</p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <span className="employee-count">
+                  {assignedEmployees.length} membre(s)
+                </span>
+              </>
             ) : (
-              <img
-                src={defaultProfil}
-                alt="Aucun employé"
-                className="modal-avatar"
-              />
+              <div className="no-team">
+                <img src={defaultProfil} alt="Aucun employé" />
+                <p>Aucun membre assigné à ce projet</p>
+              </div>
             )}
           </div>
-          <span className="employee-count">
-            {assignedEmployees.length} membre(s)
-          </span>
         </div>
       </div>
     </div>

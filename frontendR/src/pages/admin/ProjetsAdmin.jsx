@@ -3,9 +3,8 @@ import axios from "axios";
 import ProjectCard from "../../components/admin/ProjectCard";
 import { FiSearch, FiPlus } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
-import FormulaireProjet from "../../components/admin/FormulaireProjet";
-
 import "../../index.css";
+import FormulaireProjet from "../../components/admin/FormulaireProjet";
 
 const ProjetsAdmin = () => {
   const [projects, setProjects] = useState([]);
@@ -15,7 +14,9 @@ const ProjetsAdmin = () => {
   const [sortOption, setSortOption] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
   const [filterPriority, setFilterPriority] = useState("all");
-  const [showModal, setShowModal] = useState(false);
+  const [showForm, setShowForm] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
   const [newProject, setNewProject] = useState({
     name: "",
     description: "",
@@ -24,11 +25,11 @@ const ProjetsAdmin = () => {
     status: "active",
     startDate: "",
     employees: [],
+    assignedEmployees: [], // Ajoutez ce champ
     logo: null,
     priority: "medium",
   });
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -88,7 +89,11 @@ const ProjetsAdmin = () => {
           result.sort((a, b) => a.status.localeCompare(b.status));
           break;
         case "priority":
-          const priorityOrder = { high: 1, medium: 2, low: 3 };
+          const priorityOrder = {
+            high: 1,
+            medium: 2,
+            low: 3,
+          };
           result.sort(
             (a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]
           );
@@ -101,78 +106,23 @@ const ProjetsAdmin = () => {
     setFilteredProjects(result);
   }, [projects, searchTerm, sortOption, filterStatus, filterPriority]);
 
-  // const handleInputChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setNewProject((prev) => ({ ...prev, [name]: value }));
-  // };
-
-  // const handleFileChange = (e) => {
-  //   setNewProject((prev) => ({ ...prev, logo: e.target.files[0] }));
-  // };
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   const token = localStorage.getItem("token");
-
-  //   const formData = new FormData();
-  //   formData.append("name", newProject.name);
-  //   formData.append("description", newProject.description);
-  //   formData.append("company", newProject.company);
-  //   formData.append("city", newProject.city);
-  //   formData.append("status", newProject.status);
-  //   formData.append("startDate", newProject.startDate);
-  //   formData.append("priority", newProject.priority);
-  //   formData.append("logo", newProject.logo);
-
-  //   newProject.employees.forEach((employeeId) =>
-  //     formData.append("employees", employeeId)
-  //   );
-
-  //   try {
-  //     const response = await axios.post(
-  //       "http://localhost:5001/api/admin/projects/ajout",
-  //       formData,
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //           "Content-Type": "multipart/form-data",
-  //         },
-  //       }
-  //     );
-
-  //     setSuccess("Projet ajouté avec succès!");
-
-  //     // Réinitialiser le formulaire
-  //     setNewProject({
-  //       name: "",
-  //       description: "",
-  //       company: "",
-  //       city: "",
-  //       status: "active",
-  //       startDate: "",
-  //       employees: [],
-  //       logo: null,
-  //       priority: "medium",
-  //     });
-
-  //     // Fermer la modale
-  //     setShowModal(false);
-
-  //     // Attendre un court instant puis recharger la page pour afficher les nouveaux projets
-  //     setTimeout(() => {
-  //       window.location.reload();
-  //     }, 500);
-  //   } catch (err) {
-  //     console.error("Erreur lors de l'ajout du projet:", err);
-  //     setError(
-  //       err.response?.data?.message || "Erreur lors de l'ajout du projet"
-  //     );
-  //   }
-  // };
-
-  // const navigateToEmployees = () => {
-  //   navigate("/admin/employees");
-  // };
+  const handleAddProjectClick = () => {
+    setShowForm(true);
+    // Reset form state when opening
+    setNewProject({
+      name: "",
+      description: "",
+      company: "",
+      city: "",
+      status: "active",
+      startDate: "",
+      employees: [],
+      logo: null,
+      priority: "medium",
+    });
+    setError(null);
+    setSuccess(null);
+  };
 
   if (isLoading) {
     return <div className="projets loading">Chargement des projets...</div>;
@@ -180,23 +130,12 @@ const ProjetsAdmin = () => {
 
   return (
     <div className="projets">
-      <button className="add-project-btn" onClick={() => setShowModal(true)}>
-        <FiPlus className="add-icon" />
-      </button>
-
-      {showModal && (
-        <FormulaireProjet
-          setShowModal={setShowModal}
-          newProject={newProject}
-          setNewProject={setNewProject}
-          setSuccess={setSuccess}
-          setError={setError}
-          error={error}
-          success={success}
-        />
-      )}
-
-      <h1 className="projet-page-title">Projets</h1>
+      <div className="header-section">
+        <h1 className="projet-page-title">Projets</h1>
+        <button className="add-project-btn" onClick={handleAddProjectClick}>
+          <FiPlus className="add-icon" />
+        </button>
+      </div>
 
       <div className="search-filter-container">
         <div className="search-wrapper">
@@ -244,11 +183,11 @@ const ProjetsAdmin = () => {
               className="sort-select"
             >
               <option value="">🔃 Trier par</option>
-              <option value="name"> Nom</option>
-              <option value="company"> Entreprise</option>
-              <option value="city"> Ville</option>
-              <option value="status"> Statut</option>
-              <option value="priority"> Priorité</option>
+              <option value="name">Nom</option>
+              <option value="company">Entreprise</option>
+              <option value="city">Ville</option>
+              <option value="status">Statut</option>
+              <option value="priority">Priorité</option>
             </select>
           </div>
         </div>
@@ -263,6 +202,18 @@ const ProjetsAdmin = () => {
           <p className="no-projects">Aucun projet trouvé.</p>
         )}
       </div>
+
+      {showForm && (
+        <FormulaireProjet
+          setShowModal={setShowForm}
+          newProject={newProject}
+          setNewProject={setNewProject}
+          setSuccess={setSuccess}
+          setError={setError}
+          error={error}
+          success={success}
+        />
+      )}
     </div>
   );
 };

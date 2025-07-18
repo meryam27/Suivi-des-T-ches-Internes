@@ -37,7 +37,7 @@ const Employes = () => {
     );
     setFilteredEmployes(results);
   }, [searchTerm, employes]);
-
+  console.log("employes:", employes);
   return (
     <div className="employes-page">
       <h1 className="employe-page-title">Employés</h1>
